@@ -5,16 +5,21 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "tb_product")
-public class Product implements Serializable{
+public class Product implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -24,12 +29,18 @@ public class Product implements Serializable{
 	private String description;
 	private Double price;
 	private String imgUrl;
-	
-	@Transient
+
+	// <html>
+	// <body>
+	// Massagem tantrica, tatrica, kantrica
+	// <body>
+	// <html>
+	@ManyToMany @Fetch(FetchMode.JOIN)
+	@JoinTable(name = "tb_product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private Set<Category> categories = new HashSet<>();
-	
+
 	public Product() {
-		
+
 	}
 
 	public Product(Long id, String name, String description, Double price, String imgUrl) {
@@ -80,7 +91,7 @@ public class Product implements Serializable{
 		this.imgUrl = imgUrl;
 	}
 
-	public Set<Category> getCategories(){
+	public Set<Category> getCategories() {
 		return categories;
 	}
 
@@ -100,6 +111,5 @@ public class Product implements Serializable{
 		Product other = (Product) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
+
 }
